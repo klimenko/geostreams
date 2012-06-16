@@ -9,7 +9,7 @@ img.logo {
 }
 
 @media (max-width: 480px) {
-	div.motto {
+	div.motto, span.geo-stream-item-age {
 		display: none;
 	}
 }
@@ -22,7 +22,6 @@ div.motto {
 
 body {
 	background: url("../img/bg.png");
-	background-attachment: fixed;
 }
 
 .navbar a.btn-navbar {
