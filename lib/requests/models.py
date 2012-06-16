@@ -560,11 +560,12 @@ class Request(object):
             if not cert_loc:
                 cert_loc = DEFAULT_CA_BUNDLE_PATH
 
-            if not cert_loc:
-                raise Exception("Could not find a suitable SSL CA certificate bundle.")
+            #if not cert_loc:
+            #    raise Exception("Could not find a suitable SSL CA certificate bundle.")
 
-            conn.cert_reqs = 'CERT_REQUIRED'
-            conn.ca_certs = cert_loc
+            #conn.cert_reqs = 'CERT_REQUIRED'
+            conn.cert_reqs = 'CERT_NONE'
+            conn.ca_certs = None
         else:
             conn.cert_reqs = 'CERT_NONE'
             conn.ca_certs = None

@@ -116,7 +116,7 @@ class Twython(object):
         """
 
         # Needed for hitting that there API.
-        self.api_url = 'https://api.twitter.com/%s'
+        self.api_url = 'http://api.twitter.com/%s'
         self.request_token_url = self.api_url % 'oauth/request_token'
         self.access_token_url = self.api_url % 'oauth/access_token'
         self.authorize_url = self.api_url % 'oauth/authorize'
@@ -429,7 +429,7 @@ class Twython(object):
         if 'q' in kwargs:
             kwargs['q'] = urllib.quote_plus(Twython.unicode2utf8(kwargs['q']))
 
-        return self.get('https://search.twitter.com/search.json', params=kwargs)
+        return self.get('http://search.twitter.com/search.json', params=kwargs)
 
     def searchGen(self, search_query, **kwargs):
         """ Returns a generator of tweets that match a specified query.
@@ -443,7 +443,7 @@ class Twython(object):
                     print result
         """
         kwargs['q'] = urllib.quote_plus(Twython.unicode2utf8(search_query))
-        content = self.get('https://search.twitter.com/search.json', params=kwargs)
+        content = self.get('http://search.twitter.com/search.json', params=kwargs)
 
         if not content['results']:
             raise StopIteration
