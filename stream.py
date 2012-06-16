@@ -6,12 +6,13 @@ import json
 
 class Stream(webapp2.RequestHandler):
 	def get(self):
-		print os.path.dirname(__file__)
-		print "callback("
-		print json.dumps(read_instagram(), indent=4)
-		print ")"
+		self.response.headers['Content-Type'] = "application/json"
+		callback = self.request.get('callback')
+		self.response.out.write((callback+'(' if callback else '') +
+			json.dumps(self.read_instagram(), indent=4) +
+		(')' if callback else ''))
 
-	def read_twitter():
+	def read_twitter(self):
 		twitter = Twython()
 		geotweets = twitter.search(geocode="54.312422232222,48.39562501,10km")
 		res = []
@@ -27,7 +28,7 @@ class Stream(webapp2.RequestHandler):
 			})
 		return res
 
-	def read_instagram():
+	def read_instagram(self):
 		api = InstagramAPI(client_id='1a405b6f113a4476a8b08c304b964fbc', client_secret='2fe657c6a57c46e3b6edde6306336e78')
 		media = api.media_search(lat="54.312422232222", lng="48.39562501", distance="10km")
 		res = []
@@ -44,6 +45,8 @@ class Stream(webapp2.RequestHandler):
 				'source_type': "instagram"
 			})
 		return res
+
+app = webapp2.WSGIApplication([('/stream', Stream)], debug=True)
 
 # CLIENT INFO
 # CLIENT ID	1a405b6f113a4476a8b08c304b964fbc
