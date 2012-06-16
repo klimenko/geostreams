@@ -54,28 +54,34 @@ var calcAge = function(format) {
 GeoStream = function(config) {
 	if (!(config && config.target)) return;
 	this.config = $.extend(true, {
-		apiURL: "http://search.twitter.com/",
+		apiURL: "http://geostreams.appspot.com/",
 		cdnURL: ""
 	}, config);
-	this.init(config.data);
+	this.data = {};
+	this.init();
 };
 
 GeoStream.prototype = {
 	constructor: GeoStream,
-	init: function(data) {
+	init: function() {
 		this.getGeoLocation($.proxy(function(data) {
-			this.apiCall("search.json", {
-				q: "",
-				rpp: 100,
-				geocode: data.coords.latitude + "," + data.coords.longitude + ",10mi"
+			this.apiCall("stream", {
+				lat: data.coords.latitude,
+				lng: data.coords.longitude,
+				rds: this.data.rds || 10
 			}, $.proxy(function(response) {
-				this.config.target.append(this.constructItems(response.results));
+				this.config.target.append(this.constructItems(response));
 			}, this));
 		}, this));
 	},
 	constructItems: function(items) {
 		return $.foldl($('<div class="geo-stream-wrapper"></div'), items, function(item, container) {
 		var age = calcAge(item.created_at);
+		var constructName = function() {
+			return item.source_type == "twitter"
+				? '<a class="geo-stream-item-userLink" target="_blank" href="https://twitter.com/'+ item.from_user +'" title="@'+ item.from_user +'">'+ item.from_user_name +'</a>'
+				: '<span class="geo-stream-item-userLink" title="'+ item.from_user +'">'+ item.from_user_name +'</span>';
+		};
 		var row = $('<div class="row">' +
 				'<div class="span6 offset3">' +
 					'<div class="hero-unit geo-stream-item-overlay">' +
@@ -84,7 +90,7 @@ GeoStream.prototype = {
 								'<img src="'+ item.profile_image_url +'">' +
 							'</div>' +
 							'<div class="geo-stream-item-content">' +
-								'<div class="geo-stream-item-userName">'+ item.from_user_name + ' ( ' + item.from_user + ' )<span class="geo-stream-item-age">'+ age +'</span></div>' +
+								'<div class="geo-stream-item-userName">'+ constructName() + '<span class="geo-stream-item-via"> via '+ item.source_type +'</span><span class="geo-stream-item-age">'+ age +'</span></div>' +
 								'<div class="geo-stream-item-text">'+ item.text + '</div>' +
 							'</div>' +
 							'<div class="geo-stream-clear"></div>' +

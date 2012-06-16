@@ -72,3 +72,18 @@ body {
 	font-size: 1.1em;
 	color: #333333;
 }
+
+a.geo-stream-item-userLink {
+	color: #333;
+	text-decoration: none;
+}
+
+a.geo-stream-item-userLink:hover {
+	text-decoration: underline;
+}
+.geo-stream-item-via {
+	font-size: 11px;
+	color: #999;
+	margin-left: 5px;
+	font-weight: normal;
+}
