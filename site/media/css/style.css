@@ -8,14 +8,25 @@ img.logo {
 	margin: 0 0 0 10px;
 }
 
-.brand span.motto {
-	font-size: 14px;
-	margin: 0 0 0 10px;
+@media (max-width: 480px) {
+	div.motto {
+		display: none;
+	}
+}
 
+div.motto {
+	font-size: 14px;
+	margin-top: 22px;
+	float: left;
 }
 
 body {
 	background: url("../img/bg.png");
+	background-attachment: fixed;
+}
+
+.navbar a.btn-navbar {
+	margin-top: 18px;
 }
 
 #geo-stream .hero-unit {
@@ -44,7 +55,16 @@ body {
 }
 
 .geo-stream-item-content {
+	position: relative;
 	padding-left: 58px;
+}
+
+.geo-stream-item-age {
+	position: absolute;
+	right: 0;
+	color: #999;
+	font-weight: normal;
+	font-size: 11px;
 }
 
 .geo-stream-item-userName {
