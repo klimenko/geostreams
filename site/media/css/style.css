@@ -22,6 +22,7 @@ div.motto {
 
 body {
 	background: url("../img/bg.png");
+	background-attachment: fixed;
 }
 
 .navbar a.btn-navbar {
