@@ -2,14 +2,17 @@ import webapp2
 import fix_path
 from twython import Twython
 from instagram.client import InstagramAPI
+from datetime import datetime
 import json
 
 class Stream(webapp2.RequestHandler):
 	def get(self):
 		self.response.headers['Content-Type'] = "application/json"
 		callback = self.request.get('callback')
+		messages = self.read_instagram() + self.read_twitter()
+		messages.sort(self.compare, reverse=True)
 		self.response.out.write((callback+'(' if callback else '') +
-			json.dumps(self.read_instagram() + self.read_twitter(), indent=4) +
+			json.dumps(messages, indent=4) +
 		(')' if callback else ''))
 
 	def read_twitter(self):
@@ -22,7 +25,8 @@ class Stream(webapp2.RequestHandler):
 				for m in t['entities']['media']:
 					media.push({
 						"url": m["url"],
-						"type": m["type"]
+						"type": m["type"],
+						"sizes": {"large": {"w": m["sizes"]["large"]["w"], "h": m["sizes"]["large"]["h"]}}
 					})
 			res.append({
 				'created_at': t['created_at'],
@@ -45,7 +49,7 @@ class Stream(webapp2.RequestHandler):
 			#import pdb
 			#pdb.set_trace()
 			res.append({
-				'created_at': m.created_time.strftime("%a, %d %b %Y %H:%M:%S %z"),
+				'created_at': m.created_time.strftime("%a, %d %b %Y %H:%M:%S +0000"),
 				'id': m.id,
 				'from_user': m.user.username,
 				'from_user_id': m.user.id,
@@ -62,6 +66,19 @@ class Stream(webapp2.RequestHandler):
 				'source_type': "instagram"
 			})
 		return res
+
+	def compare(self, m1, m2):
+		t1 = m1['created_at'][:-6] # cutting out timezone
+		t2 = m2['created_at'][:-6]
+		t1 = datetime.strptime(t1, '%a, %d %b %Y %H:%M:%S')
+		t2 = datetime.strptime(t2, '%a, %d %b %Y %H:%M:%S')
+		if t1 > t2:
+			return 1
+		elif t1 < t2:
+			return -1
+		else:
+			return 0
+		
 
 app = webapp2.WSGIApplication([('/stream', Stream)], debug=True)
 
