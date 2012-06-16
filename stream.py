@@ -9,15 +9,18 @@ class Stream(webapp2.RequestHandler):
 	def get(self):
 		self.response.headers['Content-Type'] = "application/json"
 		callback = self.request.get('callback')
-		messages = self.read_instagram() + self.read_twitter()
+		lat      = self.request.get('lat')
+		lng      = self.request.get('lng')
+		rds      = self.request.get('rds')
+		messages = self.read_instagram(lat, lng, rds) + self.read_twitter(lat, lng, rds)
 		messages.sort(self.compare, reverse=True)
 		self.response.out.write((callback+'(' if callback else '') +
 			json.dumps(messages, indent=4) +
 		(')' if callback else ''))
 
-	def read_twitter(self):
+	def read_twitter(self, lat, lng, rds):
 		twitter = Twython()
-		geotweets = twitter.search(geocode="54.312422232222,48.39562501,10km")
+		geotweets = twitter.search(geocode=lat + "," + lng + "," + rds + "km")
 		res = []
 		for t in geotweets['results']:
 			media = []
@@ -41,9 +44,9 @@ class Stream(webapp2.RequestHandler):
 			})
 		return res
 
-	def read_instagram(self):
+	def read_instagram(self, lat, lng, rds):
 		api = InstagramAPI(client_id='1a405b6f113a4476a8b08c304b964fbc', client_secret='2fe657c6a57c46e3b6edde6306336e78')
-		media = api.media_search(lat="54.312422232222", lng="48.39562501", distance="10km")
+		media = api.media_search(lat=lat, lng=lng, distance=rds + "km")
 		res = []
 		for m in media:
 			#import pdb
