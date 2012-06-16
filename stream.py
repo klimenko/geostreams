@@ -1,12 +1,14 @@
 import webapp2
+import fix_path
 from twython import Twython
 from instagram.client import InstagramAPI
 import json
 
 class Stream(webapp2.RequestHandler):
 	def get(self):
+		print os.path.dirname(__file__)
 		print "callback("
-		print json.dumps(read_twitter() + read_instagram(), indent=4)
+		print json.dumps(read_instagram(), indent=4)
 		print ")"
 
 	def read_twitter():

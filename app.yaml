@@ -9,7 +9,7 @@ handlers:
   script: main.app
 
 - url: /stream
-  script: stream.py
+  script: stream.app
 
 - url: /(.*)
   static_files: site/\1
