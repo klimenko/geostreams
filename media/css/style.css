@@ -1,0 +1,19 @@
+img.logo {
+	width: 48px;
+	height: 48px;
+}
+
+.brand span.title {
+	color: #ffffff;
+	margin: 0 0 0 10px;
+}
+
+.brand span.motto {
+	font-size: 14px;
+	margin: 0 0 0 10px;
+
+}
+
+body {
+	background: url("../media/bg.png");
+}
