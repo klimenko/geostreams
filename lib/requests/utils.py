@@ -65,6 +65,8 @@ def dict_to_sequence(d):
 def get_netrc_auth(url):
     """Returns the Requests tuple auth for a given url from netrc."""
 
+    return
+
     try:
         locations = (os.path.expanduser('~/{0}'.format(f)) for f in NETRC_FILES)
         netrc_path = None
