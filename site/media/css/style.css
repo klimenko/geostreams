@@ -44,7 +44,16 @@ body {
 }
 
 .geo-stream-item-content {
+	position: relative;
 	padding-left: 58px;
+}
+
+.geo-stream-item-age {
+	position: absolute;
+	right: 0;
+	color: #999;
+	font-weight: normal;
+	font-size: 11px;
 }
 
 .geo-stream-item-userName {
