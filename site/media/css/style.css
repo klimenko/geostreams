@@ -8,14 +8,24 @@ img.logo {
 	margin: 0 0 0 10px;
 }
 
-.brand span.motto {
-	font-size: 14px;
-	margin: 0 0 0 10px;
+@media (max-width: 979px) {
+	div.motto {
+		display: none;
+	}
+}
 
+div.motto {
+	font-size: 14px;
+	margin-top: 22px;
+	float: left;
 }
 
 body {
 	background: url("../img/bg.png");
+}
+
+.navbar a.btn-navbar {
+	margin-top: 18px;
 }
 
 #geo-stream .hero-unit {
