@@ -1,0 +1,20 @@
+application: geostreams
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /
+  script: main.app
+
+- url: /stream
+  script: stream.py
+
+- url: /(.*)
+  static_files: site/\1
+  upload: site/(.*)
+
+libraries:
+- name: webapp2
+  version: "2.5.1"
