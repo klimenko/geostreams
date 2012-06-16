@@ -40,7 +40,7 @@ GeoStream.prototype = {
 		return $.foldl($('<div class="geo-stream-wrapper"></div'), items, function(item, container) {
 			var row = $('<div class="row">' +
 				'<div class="span6 offset3">' +
-					'<div class="hero-unit">' +
+					'<div class="hero-unit geo-stream-item-overlay">' +
 						'<div class="geo-stream-item">' +
 							'<div class="geo-stream-item-avatar">' +
 								'<img src="'+ item.profile_image_url +'">' +
