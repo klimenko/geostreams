@@ -14,8 +14,8 @@ $.extend({
 			"fragment": parts[9]
 		} : undefined;
 	},
-	substitute: function(templ, data) {
-		return template.replace(Echo.Vars.regexps.matchData, function($0, $1) {
+	substitute: function(template, data) {
+		return template.replace(matchDataReg, function($0, $1) {
 			return data[$1];
 		});
 	}
@@ -80,7 +80,7 @@ MediaGallery.prototype.construct = function(container) {
 		if (isCurrentControl)
 			controlContainer.addClass(activeControlClass);
 		element.one("error", function() {
-			itemContainer.empty().append(self.substitute(self.mediaFailedTemplate));
+			itemContainer.empty().append($.substitute(self.mediaFailedTemplate));
 			showCurrentMedia();
 		}).one("load", function() {
 			self.loadMediaHandler(element, itemContainer);
