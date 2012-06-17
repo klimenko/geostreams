@@ -106,7 +106,9 @@ a.geo-stream-item-userLink:hover {
 }
 
 .mediaGallery-item {
-	width: 100%; display: none;
+	width: 100%;
+	display: none;
+	text-align: center;
 }
 
 .mediaGallery-controls {
