@@ -55,9 +55,11 @@ GeoStream = function(config) {
 	if (!(config && config.target)) return;
 	this.config = $.extend(true, {
 		apiURL: "http://geostreams.appspot.com/",
-		cdnURL: ""
+		cdnURL: "",
+		liveUpdatesTimeout: 15000
 	}, config);
 	this.data = {};
+	this.data.items = [];
 	this.init();
 };
 
@@ -66,17 +68,48 @@ GeoStream.prototype = {
 	init: function() {
 		this.getGeoLocation($.proxy(function(data) {
 			this.getReverseGeoLocation(data.coords.latitude, data.coords.longitude);
+			this.data.coords = data.coords;
 			this.apiCall("stream", {
 				lat: data.coords.latitude,
 				lng: data.coords.longitude,
 				rds: this.data.rds || 10
 			}, $.proxy(function(response) {
+				this.data.items = response;
 				this.config.target.append(this.constructItems(response));
+				this.startLiveUpdates();
 			}, this));
 		}, this));
 	},
+	startLiveUpdates: function() {
+		var self = this;
+		var exists = function(list, element) {
+			var result = false;
+			$.each(list, function(i, el) {
+				if (el.id == element.id) {
+					result = true;
+					return false;
+				}
+			});
+			return result;
+		};
+		this.timeout = setTimeout(function() {
+			var fun = arguments.callee;
+			self.apiCall("stream", {
+				lat: self.data.coords.latitude,
+				lng: self.data.coords.longitude,
+				rds: self.data.rds || 10
+			}, function(response) {
+				var liveUpdates = $.foldl([], response, function(item, acc) {
+					if (!exists(self.data.items, item)) acc.unshift(item);
+				});
+				self.data.items = liveUpdates.concat(self.data.items);
+				self.config.target.prepend(self.constructItems(liveUpdates));
+				self.timeout = setTimeout(fun, self.config.liveUpdatesTimeout);
+			});
+		}, this.config.liveUpdatesTimeout);
+	},
 	constructItems: function(items) {
-		return $.foldl($('<div class="geo-stream-wrapper"></div'), items, function(item, container) {
+		return $.foldl($('<div class="geo-stream-wrapper"></div>'), items, function(item, container) {
 		var age = calcAge(item.created_at);
 		var constructName = function() {
 			return item.source_type == "twitter"
