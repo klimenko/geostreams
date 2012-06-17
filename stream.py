@@ -20,14 +20,14 @@ class Stream(webapp2.RequestHandler):
 
 	def read_twitter(self, lat, lng, rds):
 		twitter = Twython()
-		geotweets = twitter.search(geocode=lat + "," + lng + "," + rds + "km")
+		geotweets = twitter.search(rpp=50, geocode=lat + "," + lng + "," + rds + "km", include_entities=1)
 		res = []
 		for t in geotweets['results']:
 			media = []
 			if t.has_key('entities') and t['entities'].has_key('media'):
 				for m in t['entities']['media']:
-					media.push({
-						"url": m["url"],
+					media.append({
+						"url": m["media_url"],
 						"type": m["type"],
 						"sizes": {"large": {"w": m["sizes"]["large"]["w"], "h": m["sizes"]["large"]["h"]}}
 					})
