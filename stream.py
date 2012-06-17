@@ -3,6 +3,7 @@ import fix_path
 from twython import Twython
 from instagram.client import InstagramAPI
 from datetime import datetime
+import time
 import json
 
 class Stream(webapp2.RequestHandler):
@@ -31,8 +32,11 @@ class Stream(webapp2.RequestHandler):
 						"type": m["type"],
 						"sizes": {"large": {"w": m["sizes"]["large"]["w"], "h": m["sizes"]["large"]["h"]}}
 					})
+			ts = t['created_at'][:-6] # cutting out timezone
+			ts = datetime.strptime(ts, '%a, %d %b %Y %H:%M:%S')
 			res.append({
 				'created_at': t['created_at'],
+				'timestamp': time.mktime(ts.timetuple()),
 				'id': t['id'],
 				'from_user': t['from_user'],
 				'from_user_id': t['from_user_id'],
@@ -53,6 +57,7 @@ class Stream(webapp2.RequestHandler):
 			#pdb.set_trace()
 			res.append({
 				'created_at': m.created_time.strftime("%a, %d %b %Y %H:%M:%S +0000"),
+				'timestamp': time.mktime(m.created_time.timetuple()),
 				'id': m.id,
 				'from_user': m.user.username,
 				'from_user_id': m.user.id,
@@ -71,13 +76,9 @@ class Stream(webapp2.RequestHandler):
 		return res
 
 	def compare(self, m1, m2):
-		t1 = m1['created_at'][:-6] # cutting out timezone
-		t2 = m2['created_at'][:-6]
-		t1 = datetime.strptime(t1, '%a, %d %b %Y %H:%M:%S')
-		t2 = datetime.strptime(t2, '%a, %d %b %Y %H:%M:%S')
-		if t1 > t2:
+		if m1['timestamp'] > m2['timestamp']:
 			return 1
-		elif t1 < t2:
+		elif m1['timestamp'] < m2['timestamp']:
 			return -1
 		else:
 			return 0
