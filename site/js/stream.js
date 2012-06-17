@@ -90,14 +90,28 @@ GeoStream.prototype = {
 								'<img src="'+ item.profile_image_url +'">' +
 							'</div>' +
 							'<div class="geo-stream-item-content">' +
-								'<div class="geo-stream-item-userName">'+ constructName() + '<span class="geo-stream-item-via"> via '+ item.source_type +'</span><span class="geo-stream-item-age">'+ age +'</span></div>' +
+								'<div class="geo-stream-item-userName">'+ constructName() + '<span class="geo-stream-item-via">via '+ item.source_type +'</span><span class="geo-stream-item-age">'+ age +'</span></div>' +
 								'<div class="geo-stream-item-text">'+ item.text + '</div>' +
 							'</div>' +
 							'<div class="geo-stream-clear"></div>' +
 						'</div>' +
+						'<div class="geo-stream-item-gallery"></div>' +
 					'</div>' +
 				'</div>' +
-			'</div>').appendTo(container);
+			'</div>');
+			if (item.entities.media.length) {
+				new MediaGallery({
+					target: $(".geo-stream-item-gallery", row),
+					elements: $(
+						$.foldl("", item.entities.media, function(media, acc) {
+							if (media.type == "photo") {
+								return (acc += '<img src="'+media.url+'">');
+							}
+						})
+					)
+				});
+			}
+			row.appendTo(container);
 		});
 	},
 	getGeoLocation: function(callback) {
