@@ -65,6 +65,7 @@ GeoStream.prototype = {
 	constructor: GeoStream,
 	init: function() {
 		this.getGeoLocation($.proxy(function(data) {
+			this.getReverseGeoLocation(data.coords.latitude, data.coords.longitude);
 			this.apiCall("stream", {
 				lat: data.coords.latitude,
 				lng: data.coords.longitude,
@@ -113,6 +114,15 @@ GeoStream.prototype = {
 			}
 			row.appendTo(container);
 		});
+	},
+	getReverseGeoLocation: function(lat, lng) {
+		var coordinates = new google.maps.LatLng(lat, lng);
+		var geocoder = new google.maps.Geocoder();
+		geocoder.geocode({"latLng": coordinates}, $.proxy(function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				this.config.onGetLocation && this.config.onGetLocation(results[1]);
+			}
+		}, this));
 	},
 	getGeoLocation: function(callback) {
 		geo.getCurrentPosition(callback);
