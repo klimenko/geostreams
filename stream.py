@@ -27,7 +27,7 @@ class Stream(webapp2.RequestHandler):
 			if t.has_key('entities') and t['entities'].has_key('media'):
 				for m in t['entities']['media']:
 					media.append({
-						"url": m["url"],
+						"url": m["media_url"],
 						"type": m["type"],
 						"sizes": {"large": {"w": m["sizes"]["large"]["w"], "h": m["sizes"]["large"]["h"]}}
 					})
