@@ -14,6 +14,16 @@ img.logo {
 	}
 }
 
+@media (max-width: 680px) {
+	div.geo-location {
+		display: none;
+	}
+}
+
+div.geo-location {
+	margin-top: 22px;
+}
+
 div.motto {
 	font-size: 14px;
 	margin-top: 22px;
