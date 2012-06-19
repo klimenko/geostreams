@@ -158,7 +158,9 @@ GeoStream.prototype = {
 		}, this));
 	},
 	getGeoLocation: function(callback) {
-		geo.getCurrentPosition(callback);
+		geo.getCurrentPosition(callback, function(){
+			callback({'coords': {'latitude': 54.321614, 'longitude': 48.398814}});
+		});
 	},
 	apiCall: function(endpoint, params, callback) {
 		var config = this.config;
